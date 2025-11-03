@@ -37,7 +37,7 @@ export class _MAIN
 
         const title = _MOD.element.create("div", icon);
         title.classList.add("title");
-        title.innerHTML = diagram.info.title.text;
+        title.innerHTML = diagram.info.title.text ?? "Untitled";
         // title.title = diagram.info.title.text;
 
         const close = _MOD.element.create("div", icon);

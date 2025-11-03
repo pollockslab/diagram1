@@ -106,8 +106,9 @@ export class _MAIN extends _AXIS
         this.ctx.shadowOffsetX = 0;                  // x축 이동
         this.ctx.shadowOffsetY = 0;                  // y축 이동
 
-        this.ctx.fillStyle = "black";
+        this.ctx.fillStyle = "rgba(0,0,0,1)";
         this.ctx.fillRect(10, 10, this.width-20, this.height-20);
+        this.ctx.clearRect(10, 10, this.width-20, this.height-20);
         
         this.ctx.restore();
 

@@ -1,5 +1,5 @@
 import {_MOD, _CONFIG} from "../../diagram/diagram.js"
-import {_EDT} from "../main/main.js"
+import {_PTT} from "../main/main.js"
 
 export class _MAIN
 {
@@ -10,20 +10,18 @@ export class _MAIN
     async Init()
     {
         // 배경색상
-        this.backColorPicker = new _COLOR_PICKER(this.parentElement);
-        this.backColorPicker.select.style.borderRadius = "4px";
+        // this.backColorPicker = new _COLOR_PICKER(this.parentElement);
+        // this.backColorPicker.select.style.borderRadius = "4px";
 
         // 글자크기
         this.fontSize = await _MOD.combobox.create("none", "font-size", 
             [
-                {value: 9, title: "9px", selected: true},
-                {value: 11, title: "11px"},
-                {value: 13, title: "13px"},
-                {value: 18, title: "18px"},
-                {value: 22, title: "22px"},
-                {value: 32, title: "32px"},
-                {value: 48, title: "48px"},
-                {value: 72, title: "72px"},
+                {value: 1, title: "1px", selected: true},
+                {value: 2, title: "2px"},
+                {value: 3, title: "3px"},
+                {value: 5, title: "5px"},
+                {value: 10, title: "10px"},
+                {value: 100, title: "100px"},
             ], this.parentElement);
         this.fontSize.input.placeholder = "size";
 
@@ -31,46 +29,40 @@ export class _MAIN
         this.colorPicker = new _COLOR_PICKER(this.parentElement);
         
         // 글자굵기
-        this.bold = _MOD.element.create("div", this.parentElement);
-        this.bold.textContent = "B";
-        this.bold.classList.add("font-style");
-        this.bold.setAttribute("tabindex", "-1");
-        this.bold.style.fontWeight = "bold";
+        this.erazer = _MOD.element.create("div", this.parentElement);
+        this.erazer.textContent = "E";
+        this.erazer.classList.add("font-style");
+        this.erazer.setAttribute("tabindex", "-1");
+        this.erazer.style.fontWeight = "bold";
 
-        // 이탤릭체
-        this.italic = _MOD.element.create("div", this.parentElement);
-        this.italic.textContent = "I";
-        this.italic.classList.add("font-style");
-        this.italic.setAttribute("tabindex", "-1");
-        this.italic.style.fontStyle = "italic";
+        
 
         // 이벤트
-        this.backColorPicker.SetEvent((color) =>
-        {
-            _EDT.textarea.page.text.style.backgroundColor = color;
-        });
+        // this.backColorPicker.SetEvent((color) =>
+        // {
+        //     _PTT.cover.style.backgroundColor = color;
+        // });
         this.fontSize.OnTextChanged(size =>
         {
-            _EDT.textarea.page.StyleUpCaret({fontSize: size+"px"});
+            _PTT.ctx.lineWidth = size;
         });
 
         this.colorPicker.SetEvent((color) =>
         {
-            _EDT.textarea.page.StyleUpCaret({color: color});
+            _PTT.ctx.strokeStyle = color;
         });
 
-        this.bold.addEventListener("click", e =>
+        this.erazer.addEventListener("click", e =>
         {
-            this.bold.classList.toggle("font-style-click");
-            const isContain = this.bold.classList.contains("font-style-click");
-            _EDT.textarea.page.StyleUpCaret({fontWeight: (isContain)?"bold":"normal"});
-        });
+            this.erazer.classList.toggle("font-style-click");
+            const isContain = this.erazer.classList.contains("font-style-click");
 
-        this.italic.addEventListener("click", e =>
-        {
-            this.italic.classList.toggle("font-style-click");
-            const isContain = this.italic.classList.contains("font-style-click");
-            _EDT.textarea.page.StyleUpCaret({fontStyle: (isContain)?"italic":"normal"});
+            if(isContain) {
+                _PTT.ctx.globalCompositeOperation = "destination-out";
+            }
+            else {
+                _PTT.ctx.globalCompositeOperation = "source-over";
+            }
         });
     }
 
@@ -81,19 +73,13 @@ export class _MAIN
             this.fontSize.input.textContent = style.fontSize.replace("px", "");
         }
         else{
-            this.fontSize.input.textContent = 22;
+            this.fontSize.input.textContent = 2;
         }
-
-        if(style.fontStyle == "italic") this.italic.classList.add("font-style-click");
-        else this.italic.classList.remove("font-style-click");
-
-        if(style.fontWeight == "bold") this.bold.classList.add("font-style-click");
-        else this.bold.classList.remove("font-style-click");
     }
-    SetBackgroundColor(color)
-    {
-        this.backColorPicker.select.style.backgroundColor = color;
-    }
+    // SetBackgroundColor(color)
+    // {
+    //     this.backColorPicker.select.style.backgroundColor = color;
+    // }
 
     Load(style)
     {
@@ -103,11 +89,8 @@ export class _MAIN
             this.fontSize.input.textContent = style.fontSize.replace("px", "");
         }
         else{
-            this.fontSize.input.textContent = 22;
+            this.fontSize.input.textContent = 2;
         }
-
-        if(style.fontStyle == "italic") this.italic.classList.add("font-style-click");
-        else this.italic.classList.remove("font-style-click");
 
         if(style.fontWeight == "bold") this.bold.classList.add("font-style-click");
         else this.bold.classList.remove("font-style-click");
@@ -121,8 +104,7 @@ class _COLOR_PICKER
         this.parentElement = parentElement;
         this.palette = {
             default: ["black", "white", "red", "orange", "yellow",
-                "green", "blue", "navy", "purple",
-                    "rgb(55, 55, 55)", "rgba(0,0,0,0)"]
+                "green", "blue", "navy", "purple"]
         };
         
         // 컬러선택
@@ -143,7 +125,6 @@ class _COLOR_PICKER
             const color = _MOD.element.create("div", this.popup);
             color.classList.add("picker-color");
             color.style.backgroundColor = item;
-            color.style.border = "1px solid black";
         }
         
         // 이벤트

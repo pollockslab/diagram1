@@ -5,6 +5,7 @@ import {_MAIN as _MEMO} from "./diagram/memo.js"
 import {_MAIN as _SQUARE} from "./diagram/square.js"
 import {_MAIN as _LINE} from "./diagram/line.js"
 import {_MAIN as _PICTURE} from "./diagram/picture.js"
+import {_MAIN as _GROUP} from "./diagram/group.js"
 
 export class _MAIN
 {
@@ -89,7 +90,7 @@ export class _MAIN
         return lines;
     }
     
-    async Add(key, type, info)
+    async Add(key, type, info, addr)
     {
         let diagram = null;
         switch(type)
@@ -97,11 +98,12 @@ export class _MAIN
             case "memo":    diagram = new _MEMO();      break;
             case "square":  diagram = new _SQUARE();    break;
             case "line":    diagram = new _LINE();      break;
-            case "picture":    diagram = new _PICTURE();      break;
+            case "picture": diagram = new _PICTURE();   break;
+            case "group":   diagram = new _GROUP();     break;
             default: return;
         }
         info.key = key;
-        await diagram.Load(info);
+        await diagram.Load(info, addr);
         _WIN.AppendChild(diagram);
         // key 없으면 생성
         if(!key)

@@ -34,26 +34,33 @@ export class _MAIN
         // 5. 이벤트
         this.background.addEventListener("mouseup", async e =>
         {
+            
             if(e.target === this.background) {
                 this.display = false;
                 if(!this.diagram) return;
                 
                 const rootDiagram = this.diagram.GetRoot();
                 const textarea = this.textarea.page.text;
-                const info = {};
-                info[this.diagram.type] = {
-                    text: textarea.innerHTML?? "",
-                    backgroundColor: textarea.style.backgroundColor
-                };
+                
+                let info = {};
+                if(this.diagram.type === "square") {
+                    info = {
+                        text: textarea.innerHTML?? "",
+                        backgroundColor: textarea.style.backgroundColor
+                    };    
+                }
+                else {
+                    info[this.diagram.type] = {
+                        text: textarea.innerHTML?? "",
+                        backgroundColor: textarea.style.backgroundColor
+                    };
+                }
                 
                 rootDiagram.Load(info);
                 await _STO.SaveDiagram(rootDiagram);
                 _WIN.Draw();
             }
         });
-
-        
-
     }
 
     get display()
@@ -91,4 +98,5 @@ export class _MAIN
     {
 
     }
+    
 }

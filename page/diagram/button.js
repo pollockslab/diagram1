@@ -13,6 +13,9 @@ export class _MAIN extends _AXIS
     }
     Load(info)
     {
+        // info에 float:right 있으면 우측 기준으로, left면 좌측으로
+        // 기본 우측으로 해보자
+        // 이미지도
         this.key = info.key??this.key;
         for(let name in info)
         {
@@ -20,7 +23,7 @@ export class _MAIN extends _AXIS
         }
 
         // resize
-         this.x = info.x??this.x;
+        this.x = info.x??this.x;
         this.y = info.y??this.y;
         this.width = info.width??this.width;
         this.height = info.height??this.height;

@@ -15,12 +15,10 @@ export class _MAIN extends _AXIS
         this.textHeight = 0;
 
         this.img = new Image();
-        this.cavPen = document.createElement("canvas");
-        this.ctxPen = this.cavPen.getContext("2d");
-        
+        this.pen = new Image();
     }
     
-    async Load(info)
+    async Load(info, isPictureSize)
     {
         this.key = info.key??this.key;
         for(let name in info)
@@ -34,26 +32,45 @@ export class _MAIN extends _AXIS
         this.y = info.y??this.y;
         this.width = info.width??this.width;
         this.height = info.height??this.height;
-
-        this.Draw();
-
-        return new Promise((resolve) => {
-            if(info.file) {
-                this.img.src = URL.createObjectURL(info.file);
-                this.img.onload = (e) =>
-                {
-                    this.width = info.width??this.img.width;
-                    this.height = info.height??this.img.height;
-                    this.Draw();
-                    resolve();
-                };
-            }
-            else {
-                resolve();
-            }
-            
-        });
         
+        if(info.file) {
+            this.img = await this.FileLoad(info.file);
+            if(isPictureSize) {
+                this.width = this.img.width;
+                this.height = this.img.height;
+                this.info.width = this.width;
+                this.info.height = this.height;
+            }
+        }
+       
+        if(info.pen) {
+            this.pen = await this.ImgLoad(info.pen);
+            
+        }
+        this.Draw();
+    }
+
+    async FileLoad(file)
+    {
+        return new Promise((resolve) => {
+            const img = new Image();
+            img.src = URL.createObjectURL(file);
+            img.onload = (e) =>
+            {
+                resolve(img);
+            };
+        })
+    }
+    async ImgLoad(data)
+    {
+        return new Promise((resolve) => {
+            const img = new Image();
+            img.src = data;
+            img.onload = (e) =>
+            {
+                resolve(img);
+            };
+        })
     }
 
     Draw(gapX=0, gapY=0, gapWidth=0, gapHeight=0)
@@ -64,13 +81,13 @@ export class _MAIN extends _AXIS
         this.ctx.strokeStyle = "white";
         this.ctx.strokeRect(0,0, this.width, this.height);
         this.ctx.drawImage(this.img, 0,0, this.width, this.height);
+        this.ctx.drawImage(this.pen, 0,0, this.width, this.height);
 
         this.DrawChildren();
     }
 
     onClick()
     {
-        console.log("클릭");
         _PTT.Load(this);
         _PTT.display = true;
     }

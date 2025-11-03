@@ -149,12 +149,34 @@ export class _MAIN
             else if(isClick && this.collide.root.type != "window" &&
                 this.collide.root.type != "line") 
             {
-                // _EDT.Load(this.collide.item);
-                // _EDT.display = true;
                 this.collide.item.Event("onClick", this.collide); // 2번째 파라미터는 정보
             }
             else if(this.collide.root.type != "window")
             {
+                // 그룹체크
+                const group = _WIN.GetCollisionGroup(this.collide.root);
+                if(this.collide.root.type === "group") 
+                {
+                    const gGroup = this.collide.root;
+                    for(let i=0; i<gGroup.info.groupping.length; i++){
+                        const gKey = gGroup.info.groupping[i];
+                        const gItem = _WIN.FindChild(gKey);
+                        if(!gItem) {
+                            await _STO.SaveDiagram(gItem);        
+                        }
+                    }
+                }
+                else if(group) {
+                    group.AddGroup(this.collide.root);
+                    await _STO.SaveDiagram(group);  
+                }
+                else if(this.collide.root.group) {
+                    const dGroup = this.collide.root.group;
+                    dGroup.RemoveGroup(this.collide.root);
+                    await _STO.SaveDiagram(dGroup);  
+                    console.log("떨어졌다");
+                }
+                console.log("여기")
                 // 바뀐게 없는데도 저장하고 있다
                 await _STO.SaveDiagram(this.collide.root);
             }
@@ -193,8 +215,8 @@ export class _MAIN
 
             // 이미지
             if(file.type.startsWith("image/")) {
-
-                await _GRD.Add(null, "picture", {x: spaceX, y: spaceY, file: file});
+                const isPictureSize = true;
+                await _GRD.Add(null, "picture", {x: spaceX, y: spaceY, file: file}, isPictureSize);
             }
             // 오디오
             else if(file.type.startsWith("audio/")) {

@@ -14,15 +14,16 @@ export class _MAIN
         this.parentElement.host.style.opacity = 1;
         this.btnList = [
             {key: "onHide",         type: "action", src:"/icon/menu.svg", tooltip:"리모콘 숨기기"},
-            {key: "onSquare",       type: "toggle", src:"/icon/add_square.png", tooltip:"메모추가"},
+            {key: "onMemo",       type: "toggle", src:"/icon/add_square.png", tooltip:"메모추가"},
             {key: "onLine",         type: "toggle", src:"/icon/circuit.png", tooltip:"라인추가"},
             // {key: "onFullscreen",   type: "action", src:"/resource/icon/circuit.png", tooltip:"전체화면on/off"},
-            {key: "onSquare2",      type: "toggle", src:"/icon/square.png", tooltip:"상자추가"},
+            {key: "onSquare",      type: "toggle", src:"/icon/square.png", tooltip:"상자추가"},
             {key: "onFavorite",     type: "toggle", src:"/menu/favorite.png", tooltip:"즐겨찾기 추가"},
             {key: "onMultiselect",  type: "toggle", src:"/menu/multiselect.png", tooltip:"다중선택"},
             {key: "onPicture",      type: "toggle", src:"/menu/picture.png", tooltip:"그림추가"},
             {key: "onGroup",        type: "toggle", src:"/menu/group.png", tooltip:"그룹추가"},
             {key: "onRemove",       type: "toggle", src:"/menu/remove.png", tooltip:"상자삭제"},
+            {key: "onImageDownload",type: "action", src:"/menu/imageDownload.png", tooltip:"현재화면 이미지저장"},
             // 그룹추가 --> 그룹 칸에 제목수정부분 넣고, 안에 메모, 이미지 넣으면 들어가게
             //  ㄴ 메모, 이미지등 드래그로 추가가능, 밖으로 빼기도 가능. 보더밝게해서 표시
             //  ㄴ 라인 이어진건 밖이랑 연동해야지
@@ -110,7 +111,16 @@ export class _MAIN
         }
     }
 
-    async onSquare(square, spaceX, spaceY)
+    async onGroup(square, spaceX, spaceY)
+    {
+        // 1. 상자생성
+        const add = await _GRD.Add(null, "group", {x: spaceX, y: spaceY});
+        
+        // 2. 토글 초기화
+        this.RemoveToggle();
+    }
+
+    async onMemo(square, spaceX, spaceY)
     {
         // 1. 상자생성
         const add = await _GRD.Add(null, "memo", {x: spaceX, y: spaceY});
@@ -119,7 +129,7 @@ export class _MAIN
         this.RemoveToggle();
     }
 
-    async onSquare2(square, spaceX, spaceY)
+    async onSquare(square, spaceX, spaceY)
     {
         // 1. 상자생성
         const add = await _GRD.Add(null, "square", {x: spaceX, y: spaceY});
@@ -202,5 +212,13 @@ export class _MAIN
 
         // 3. 토글 초기화
         this.RemoveToggle();
+    }
+
+    async onImageDownload(square, spaceX, spaceY)
+    {
+        const link = document.createElement("a");
+        link.download = "download.jpg";
+        link.href = _WIN.cav.toDataURL("image/jpeg");
+        link.click();
     }
 }

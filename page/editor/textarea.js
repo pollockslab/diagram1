@@ -86,7 +86,7 @@ export class _MAIN
     Load(info)
     {
         this.text.innerHTML = info.text.replace(/\n/g, "<br>");
-        this.text.style.backgroundColor = info.backgroundColor;
+        this.text.style.backgroundColor = info.backgroundColor ?? "black";
     }
 
     StyleUpCaret(style) 

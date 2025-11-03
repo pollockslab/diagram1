@@ -23,7 +23,6 @@ class _DIAGRAM
         {
             const script = await import(_CONFIG.dir.diagram + item.script + ".js");
             this[item.script] = script.default;
-
             if(item.css)
             {   
                 const response = await fetch(_CONFIG.dir.diagram + item.script + ".css");

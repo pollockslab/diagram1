@@ -20,7 +20,12 @@ export class _MAIN
         this.cover = _MOD.element.create("div", this.background);
         this.cover.classList.add("cover");
 
-        // 3. 이미지
+        // 3. 폰트
+        this.font = await _MOD.panel.create(
+            _CONFIG.dir.page + "/palette/fontbox", this.cover);
+        this.font.panel.classList.add("font");
+
+        // 4. 이미지
         this.img = new Image();
         this.img.draggable = false;
         this.cover.appendChild(this.img);
@@ -40,22 +45,21 @@ export class _MAIN
         // 5. 이벤트
         this.background.addEventListener("mouseup", async e =>
         {
-            if(e.target === this.background) {
-                this.display = false;
-                if(!this.diagram) return;
-                
-                // const rootDiagram = this.diagram.GetRoot();
-                // const textarea = this.textarea.page.text;
-                // const info = {};
-                // info[this.diagram.type] = {
-                //     text: textarea.innerHTML?? "",
-                //     backgroundColor: textarea.style.backgroundColor
-                // };
-                
-                // rootDiagram.Load(info);
-                // await _STO.SaveDiagram(rootDiagram);
-                _WIN.Draw();
+            if(e.target !== this.background) {
+                return;
             }
+            this.display = false;
+            if(!this.diagram) return;
+            
+            const imgSave = this.cav.toDataURL("image/png");
+            const rootDiagram = this.diagram.GetRoot();
+            const info = {
+                pen: imgSave
+            };
+            rootDiagram.Load(info);
+            await _STO.SaveDiagram(rootDiagram);
+            _WIN.Draw();
+            
         });
 
         // 마우스 누르면 그리기 시작
@@ -124,10 +128,7 @@ export class _MAIN
 
     async Load(diagram)
     {
-        const rect = this.background.getBoundingClientRect();
-        console.log("1dd", document.body.clientWidth);
-        // 이미지 보여지는게 최대 화면크기를 넘으면 안된다.
-        // 비율 봐서 계산해보자
+        this.diagram = diagram;
         const ratio = diagram.width/diagram.height;
         const maxWidth = document.body.clientWidth - 100;
 
@@ -147,6 +148,8 @@ export class _MAIN
             this.img.src = "";
         }
         
+        // 펜그림 옮기기
+        this.ctx.drawImage(diagram.pen, 0, 0);
 
     }
 }

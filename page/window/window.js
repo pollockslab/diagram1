@@ -135,6 +135,37 @@ export class _MAIN extends _AXIS
         // return spaceLine/this.zoom;
     }
 
+    // A 와 B가 서로 겹치는지 체크
+    IsCollisionBetween(A, B)
+    {
+        const rootA = A.GetRoot();
+        const rootB = B.GetRoot();
+
+        const xOverlap =
+            rootA.x < rootB.x + rootB.width &&
+            rootA.x + rootA.width > rootB.x;
+
+        const yOverlap =
+            rootA.y < rootB.y + rootB.height &&
+            rootA.y + rootA.height > rootB.y;
+
+        return xOverlap && yOverlap;
+    }
+
+    GetCollisionGroup(diagram)
+    {
+        if(!diagram || diagram.type === "group") return null;
+        for(let i=this.children.length-1; i>=0; i--)
+        {
+            const child = this.children[i];
+            if(child.type !== "group") continue;
+
+            // 겹치면 true 리턴
+            if(this.IsCollisionBetween(diagram, child)) return child;
+        }
+        return null;
+    }
+
 
     Draw()
     {
@@ -213,6 +244,11 @@ export class _MAIN extends _AXIS
         const rows = Math.ceil(this.cav.height/height) + 2;
 
         this.ctx.save();
+
+        // 배경색 그리기
+        this.ctx.fillStyle = "rgb(30, 30, 40)";
+        this.ctx.fillRect(0,0,this.cav.width,this.cav.height);
+
         this.ctx.strokeStyle = "rgb(90, 90, 110)";
         this.ctx.lineWidth = (this.scope.min/this.zoom);
         this.ctx.beginPath();
