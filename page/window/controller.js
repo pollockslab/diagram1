@@ -153,7 +153,7 @@ export class _MAIN
             }
             else if(this.collide.root.type != "window")
             {
-                // 그룹체크
+                // 그룹체크( 여기 그룹같은걸 없애야돼. 복잡해)
                 const group = _WIN.GetCollisionGroup(this.collide.root);
                 if(this.collide.root.type === "group") 
                 {

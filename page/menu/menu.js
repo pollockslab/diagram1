@@ -24,6 +24,7 @@ export class _MAIN
             {key: "onGroup",        type: "toggle", src:"/menu/group.png", tooltip:"그룹추가"},
             {key: "onRemove",       type: "toggle", src:"/menu/remove.png", tooltip:"상자삭제"},
             {key: "onImageDownload",type: "action", src:"/menu/imageDownload.png", tooltip:"현재화면 이미지저장"},
+            {key: "onSetting",      type: "action", src:"/menu/setting.png", tooltip:"환경설정"},
             // 그룹추가 --> 그룹 칸에 제목수정부분 넣고, 안에 메모, 이미지 넣으면 들어가게
             //  ㄴ 메모, 이미지등 드래그로 추가가능, 밖으로 빼기도 가능. 보더밝게해서 표시
             //  ㄴ 라인 이어진건 밖이랑 연동해야지
@@ -92,8 +93,9 @@ export class _MAIN
         }
     }
 
-    onHide()
+    async onHide()
     {
+        const stream = await navigator.mediaDevices.getDisplayMedia({video: true});
         // await _GRD.SpaceOut();
         // _WIN.Draw();
         this.parentElement.host.style.opacity = 

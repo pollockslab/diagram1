@@ -1,0 +1,62 @@
+
+.star {
+
+    position: sticky;
+    left: 2px;
+    top: 2px;
+    width: 40px;
+    height: 40px;
+    z-index: 2;
+}
+.icon {
+    position: relative;
+    display: inline-block;
+    min-width: 50px;
+    height: 30px;
+    background-color: rgb(50, 50, 50);/*aliceblue;*/
+    margin: 10px 5px 5px 5px;
+    
+    text-align: center;
+    border-radius: 6px;
+    overflow: hidden;
+}
+.icon:hover {
+    cursor: pointer;
+}
+.title {
+    position: relative;
+    display: inline-block;
+    margin-left: 10px;
+    margin-right: 10px;
+    max-width: 100px;
+    vertical-align: top;
+    line-height: 30px;
+
+    /* color:aliceblue; */
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.close {
+    float: right;
+    position: relative;
+    top: 5px;
+    right: 5px;
+    width: 20px;
+    height: 20px;
+    background-color: red;
+    color: white;
+    font-weight: bold;
+    line-height: 15px;
+    border-radius: 10px;
+
+    text-align: center;
+}
+.close:hover {
+    background-color: brown;
+}
+.close:active {
+    background-color: rgb(200, 100, 100);
+}

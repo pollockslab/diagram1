@@ -1,4 +1,5 @@
 import {_AXIS} from "../axis.js"
+import {_GIM} from "../main/main.js"
 
 export class _MAIN extends _AXIS
 {
@@ -6,11 +7,10 @@ export class _MAIN extends _AXIS
     {
         super("button");
         this.info = {};
+        const gim = _GIM.Find("favorite");
+        this.img = gim.img;
     }
-    async Init(parent) 
-    {
-        this.parent = parent;
-    }
+    
     Load(info)
     {
         // info에 float:right 있으면 우측 기준으로, left면 좌측으로
@@ -37,14 +37,19 @@ export class _MAIN extends _AXIS
         this.cav.width = this.width;
         this.cav.height = this.height;
 
-        this.ctx.fillStyle = this.info.backgroundColor ?? "black";
-        this.ctx.fillRect(0, 0, this.width, this.height);
-        this.ctx.fillStyle = "white";
-        this.ctx.fillText(this.info.text, 0, 10);
+        // this.ctx.fillStyle = this.info.backgroundColor ?? "black";
+        // this.ctx.fillRect(0, 0, this.width, this.height);
+        // this.ctx.fillStyle = "white";
+        // this.ctx.fillText(this.info.text, 0, 10);
+        this.ctx.drawImage(this.img, 0, 0, this.width, this.height);
 
         this.DrawChildren();
     }
 
+    onClick()
+    {
+        console.log("즐찾누름")
+    }
 
 }
 

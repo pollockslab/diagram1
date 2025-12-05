@@ -9,39 +9,45 @@ export default class _DIAGRAM_INDEXEDDB
     async Init(json)
     {
         this.json = json;
-
+        // console.log("json", this.json)
         return new Promise((resolve, reject) =>
         {
             // db 오픈
             const req = window.indexedDB.open("diagram", this.json.version);
             req.onerror = (e) => {
                 // console.log("indexedDB error", e);
-                throw new Error("open failed");
+                reject(new Error("open failed"));
             };
             req.onsuccess = (e) => {
                 this.db = e.target.result;
-                // console.log("indexedDB success", req.result);
+                console.log("indexedDB success", req.result);
                 resolve();
             };
             req.onupgradeneeded = (e) => {
-                this.db = e.target.result;
-                console.log("upgrade", this.db);
-                
-                for(let name in this.json.table)
-                {
-                    this.#Create(e,
-                            name, 
-                            this.json.table[name].key,
-                            this.json.table[name].index);
-                }
+                try {
+                    this.db = e.target.result;
+                    console.log("upgrade", this.db);
+                    
+                    for(let name in this.json.table)
+                    {
+                        this.#Create(e,
+                                name, 
+                                this.json.table[name].key,
+                                this.json.table[name].index);
+                    }
 
-                // 버전정보 등록
-                const ts = e.target.transaction;
-                const store = ts.objectStore("version_history");
-                store.add({
-                    version: this.json.version,
-                    timestamp: _MOD.GetCurrentDateTime()}
-                );
+                    // 버전정보 등록
+                    const ts = e.target.transaction;
+                    const store = ts.objectStore("version_history");
+                    store.add({
+                        version: this.json.version,
+                        timestamp: _MOD.GetCurrentDateTime()}
+                    );
+                }
+                catch(e) {
+                    reject(e);
+                }
+                
             };
         })
         .catch((error) =>

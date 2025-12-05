@@ -1,7 +1,7 @@
 import {_MOD, _CONFIG} from "../../diagram/diagram.js"
 import {_CAPTURE} from "../editor/transcanvas.js"
 
-export let _MAN, _STO, _MEU, _WIN, _IFO, _GRD, _SETTING, _EDT, _CAP, _FVO, _PTT;
+export let _MAN, _STO, _MEU, _WIN, _IFO, _GRD, _SETTING, _EDT, _CAP, _FVO, _PTT, _GIM, _TIL;
 
 
 export class _MAIN
@@ -55,6 +55,13 @@ export class _MAIN
         this.favorite.panel.classList.add("favorite");
         _FVO = this.favorite.page;
 
+        this.title = await _MOD.panel.create(page + "/title/title", this.parentElement);
+        this.title.panel.classList.add("title");
+        _TIL = this.title.page;
+
+        // 글로벌 이미지로더
+        _GIM = new GLOBAL_IMAGE();
+
         // 맵 로드
         await this.Load(_SETTING.space);
     }   
@@ -62,6 +69,9 @@ export class _MAIN
     async Load(key)
     {
         if(!key) {return;}
+
+        // 0. 글로벌 로드
+        await _GIM.Load();
 
         // 1. 타일정보 _GRD 에 로드(초기화)
         await _GRD.Load(key);
@@ -71,6 +81,53 @@ export class _MAIN
     
         // 3. favorite 로드
         await _FVO.Load();
+
+        // 4. title 로드
+        await _TIL.Load();
+    }
+
+}
+
+class GLOBAL_IMAGE 
+{
+    constructor()
+    {
+    }
+
+    async Load()
+    {
+        this.list = [
+            this.Image({key: "favorite", src: _CONFIG.dir.resource + "/menu/favorite.png"}),
+            // this.Image({key: "favorite", src: _CONFIG.dir.resource + "/menu/space.png"}),
+        ];
+        this.info = await Promise.all(this.list);
+    }
+
+    async Image(info)
+    {
+        return new Promise((resolve, reject) =>
+        {
+            const img = new Image();
+            img.onload = () => {
+                info.img = img;
+                info.onload = true;
+                resolve(info);
+            }
+            img.onerror = (err) => {
+                info.onload = false;
+                reject(info);
+            }
+            img.src = info.src;
+        })
+    }
+
+    Find(key) 
+    {
+        for(let i=0; i<this.info.length; i++)
+        {
+            const item = this.info[i];
+            if(item.key === key) return item;
+        }
     }
 }
 

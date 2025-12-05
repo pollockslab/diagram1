@@ -33,12 +33,16 @@ export class _MAIN
         
         if(Array.isArray(list))
         {
+            // 1. diagram 로드
             for(const diagramKey of list)
             {
                 const select = await _STO.SelectDiagram(diagramKey);
                 if(!select) {continue;}
                 await this.Add(select.key, select.type, select.info);
             };
+
+            // 2. 그룹 연결
+            
         }
         
     }

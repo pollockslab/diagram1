@@ -36,8 +36,9 @@ export class _MAIN extends _AXIS
         this.favorite = new _BUTTON();
         this.favorite.isDrag = false;
         this.favorite.type = "button";
-        this.favorite.Load({backgroundColor: "red", float:"right", x: 200, y: 40, width: 50, height: 50, text:"버튼"});
+        this.favorite.Load({visible:true, backgroundColor: "red", float:"right", x: 20, y: 40, width: 50, height: 50, text:"버튼"});
         this.AppendChild(this.favorite);
+        // info.favorite
     }
     
     Load(info)
@@ -60,6 +61,17 @@ export class _MAIN extends _AXIS
         if(info.content) {
             this.content.Load(info.content);
         }
+        // 버튼등 우측정렬 위해 추가
+        if(info.width) {
+            if(this.favorite.info.float == "right") {
+                this.favorite.x = this.width - this.favorite.x - this.favorite.width;
+            }
+        }
+        // 메모info에 저장 or fovirite버튼 info에저장후 indexeddb 에 보내는걸 나눠야할지
+        // 헷깔려서 못하겠다
+        // if(info.favorite) {
+
+        // }
         
         this.Draw();
 
